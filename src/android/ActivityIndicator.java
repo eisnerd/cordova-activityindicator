@@ -31,15 +31,20 @@ public class ActivityIndicator extends CordovaPlugin {
 	 * @param text - Message to display in the Progress Dialog
 	 */
 	public void show(String text) {
-		activityIndicator = ProgressDialog.show(this.cordova.getActivity(), "", text);
+		ProgressDialog _activityIndicator = activityIndicator;
+		if (_activityIndicator == null)
+			activityIndicator = ProgressDialog.show(this.cordova.getActivity(), "", text);
+		else
+			_activityIndicator.setMessage(text);
 	}
 
 	/**
 	 * This hide the ProgressDialog
 	 */
 	public void hide() {
-		if (activityIndicator != null) {
-			activityIndicator.dismiss();
+		ProgressDialog _activityIndicator = activityIndicator;
+		if (_activityIndicator != null) {
+			_activityIndicator.dismiss();
 			activityIndicator = null;
 		}
 	}
