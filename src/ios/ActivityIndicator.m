@@ -11,10 +11,11 @@
 - (void)show:(CDVInvokedUrlCommand*)command
 {
 	NSString* text = [command.arguments objectAtIndex:0];
-	self.activityIndicator = nil;
-	self.activityIndicator = [MBProgressHUD showHUDAddedTo:self.webView.superview animated:YES];
-	self.activityIndicator.mode = MBProgressHUDModeIndeterminate;
-    self.activityIndicator.labelText = text;
+	if (!self.activityIndicator) {
+		self.activityIndicator = [MBProgressHUD showHUDAddedTo:self.webView.superview animated:YES];
+		self.activityIndicator.mode = MBProgressHUDModeIndeterminate;
+	}
+	self.activityIndicator.labelText = text;
     CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@""];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
@@ -30,6 +31,7 @@
 		return;
 	}
 	[self.activityIndicator hide:YES];
+	self.activityIndicator = nil;
     CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@""];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
