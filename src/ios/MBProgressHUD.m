@@ -118,6 +118,7 @@ static const CGFloat kDetailsLabelFontSize = 12.f;
 @synthesize size;
 #if NS_BLOCKS_AVAILABLE
 @synthesize completionBlock;
+@synthesize onDone;
 #endif
 
 #pragma mark - Class methods
@@ -375,6 +376,10 @@ static const CGFloat kDetailsLabelFontSize = 12.f;
 	if (self.completionBlock) {
 		self.completionBlock();
 		self.completionBlock = NULL;
+	}
+	if (self.onDone) {
+		self.onDone();
+		self.onDone = NULL;
 	}
 #endif
 	if ([delegate respondsToSelector:@selector(hudWasHidden:)]) {

@@ -4,6 +4,7 @@
 
 @implementation ActivityIndicator
 @synthesize activityIndicator;
+@synthesize callbackId;
 
 /**
  * This show the ProgressDialog
@@ -14,10 +15,18 @@
 	if (!self.activityIndicator) {
 		self.activityIndicator = [MBProgressHUD showHUDAddedTo:self.webView.superview animated:YES];
 		self.activityIndicator.mode = MBProgressHUDModeIndeterminate;
+#ifdef NS_BLOCKS_AVAILABLE
+		self.activityIndicator.onDone = ^()
+		{
+			[self cancel];
+		};
+#endif
 	}
 	self.activityIndicator.labelText = text;
-    CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@""];
-    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+	self.callbackId = command.callbackId;
+	CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_NO_RESULT];
+	[pluginResult setKeepCallbackAsBool:YES];
+	[self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
 /**
@@ -32,8 +41,14 @@
 	}
 	[self.activityIndicator hide:YES];
 	self.activityIndicator = nil;
-    CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@""];
-    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+	CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@""];
+	[self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+}
+
+- (void)cancel
+{
+	CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"cancel"];
+	[self.commandDelegate sendPluginResult:pluginResult callbackId:self.callbackId];
 }
 
 @end

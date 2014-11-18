@@ -274,6 +274,11 @@ typedef void (^MBProgressHUDCompletionBlock)();
  */
 @property (copy) MBProgressHUDCompletionBlock completionBlock;
 
+/**
+ * A block that gets called after the HUD was completely hidden.
+ */
+@property (copy) MBProgressHUDCompletionBlock onDone;
+
 #endif
 
 /** 
