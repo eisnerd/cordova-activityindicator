@@ -211,6 +211,10 @@ static const CGFloat kDetailsLabelFontSize = 12.f;
 		[self updateIndicators];
 		[self registerForKVO];
 		[self registerForNotifications];
+
+		self.userInteractionEnabled = YES;
+		[self addGestureRecognizer: [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTap:)]];
+
 	}
 	return self;
 }
@@ -512,6 +516,11 @@ static const CGFloat kDetailsLabelFontSize = 12.f;
 		[indicator removeFromSuperview];
 		self.indicator = nil;
 	}
+}
+
+- (void)onTap:(UITapGestureRecognizer *)recognizer {
+	CGPoint location = [recognizer locationInView:[recognizer.view superview]];
+	[self hide:YES];
 }
 
 #pragma mark - Layout
